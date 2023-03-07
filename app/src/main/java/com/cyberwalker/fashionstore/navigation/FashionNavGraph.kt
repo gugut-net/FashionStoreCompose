@@ -28,6 +28,8 @@ import com.cyberwalker.fashionstore.detail.DetailScreenActions
 import com.cyberwalker.fashionstore.dump.animatedComposable
 import com.cyberwalker.fashionstore.home.HomeScreen
 import com.cyberwalker.fashionstore.home.HomeScreenActions
+import com.cyberwalker.fashionstore.login.SignInScreen
+import com.cyberwalker.fashionstore.login.SignInScreenActions
 import com.cyberwalker.fashionstore.splash.SplashScreen
 import com.cyberwalker.fashionstore.splash.SplashScreenActions
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -37,6 +39,8 @@ sealed class Screen(val name: String, val route: String) {
     object Splash : Screen("splash", "splash")
     object Home : Screen("home", "home")
     object Detail : Screen("detail", "detail")
+    object SignIn: Screen("signin","signin")
+
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -64,12 +68,16 @@ fun FashionNavGraph(
         animatedComposable(Screen.Detail.route) {
             DetailScreen(onAction = actions::navigateFromDetails)
         }
+
+        animatedComposable(Screen.SignIn.route) {
+            SignInScreen(onAction = actions::navigateFromSignIn)
+        }
     }
 }
 
 class NavActions(private val navController: NavController) {
     fun navigateToHome(_A: SplashScreenActions) {
-        navController.navigate(Screen.Home.name) {
+        navController.navigate(Screen.SignIn.name) {
             popUpTo(Screen.Splash.route){
                 inclusive = true
             }
@@ -87,6 +95,14 @@ class NavActions(private val navController: NavController) {
     fun navigateFromDetails(actions: DetailScreenActions) {
         when(actions) {
             DetailScreenActions.Back -> navController.popBackStack()
+        }
+    }
+
+    fun navigateFromSignIn(actions: SignInScreenActions) {
+        when (actions) {
+            SignInScreenActions.LoadHome -> {
+                navController.navigate(Screen.Home.name)
+            }
         }
     }
 }

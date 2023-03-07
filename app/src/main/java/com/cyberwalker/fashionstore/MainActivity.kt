@@ -21,10 +21,11 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.cyberwalker.fashionstore.login.SignInScreen
 import com.cyberwalker.fashionstore.navigation.FashionNavGraph
 import com.cyberwalker.fashionstore.ui.theme.FashionStoreTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,5 +58,15 @@ fun App() {
 fun DefaultPreview() {
     FashionStoreTheme {
         App()
+    }
+}
+
+@Preview
+@Composable
+fun SignInScreenPreview() {
+    FashionStoreTheme {
+        SignInScreen(
+
+            onAction = {})
     }
 }
