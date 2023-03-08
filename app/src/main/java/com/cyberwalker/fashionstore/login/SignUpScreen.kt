@@ -1,5 +1,6 @@
 package com.cyberwalker.fashionstore.login
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,6 +19,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.cyberwalker.fashionstore.R
 import com.cyberwalker.fashionstore.ui.theme.ltgray_dot
 import com.cyberwalker.fashionstore.ui.theme.poppinsFamily
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 
@@ -29,6 +32,8 @@ fun SignUpScreen(
 
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+    var verifyPassword by rememberSaveable { mutableStateOf("")}
+
     val scope = rememberCoroutineScope()
     val state by viewModel.signUpState.collectAsState(initial = null)
 
@@ -85,8 +90,8 @@ fun SignUpScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
         TextField(
-            value = password,
-            onValueChange = { password = it },
+            value = verifyPassword,
+            onValueChange = { verifyPassword = it },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = ltgray_dot,
@@ -97,15 +102,22 @@ fun SignUpScreen(
             ),
             shape = RoundedCornerShape(8.dp),
             singleLine = true,
-            label = { Text(text = "Password") },
+            label = { Text(text = "Verify password") },
             visualTransformation = PasswordVisualTransformation(),
         )
 
         Button(
             onClick = {
-                scope.launch {
-                    viewModel.loginUser(email, password)
-                }
+                Firebase.auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            onAction(SignUpScreenActions.LoadSignUp)
+                            Log.d("Welcome", "Signup successful")
+                        } else {
+                            // Handle signup failure
+                            Log.e("Sorry", "Signup failed: ${task.exception}")
+                        }
+                    }
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -135,14 +147,14 @@ fun SignUpScreen(
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             fontFamily = poppinsFamily,
-            modifier = Modifier.clickable {
-                onAction(SignUpScreenActions.LoadSignUp)
-            }.padding(15.dp)
+            modifier = Modifier
+                .clickable {
+                    onAction(SignUpScreenActions.LoadSignUp)
+                }
+                .padding(15.dp)
         )
     }
 }
-
-
 sealed class SignUpScreenActions {
     object LoadSignUp : SignUpScreenActions()
 }

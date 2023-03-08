@@ -19,14 +19,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         Log.d("Firebase Token", "Token: $token")
-        //callBackendServer(token)
+//        callBackendServer(token)
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
 
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val NOTIFICATION_CHANNEL_ID = "Nilesh_channel"
+        val NOTIFICATION_CHANNEL_ID = "Niles_channel"
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(
@@ -43,7 +43,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notificationManager.createNotificationChannel(notificationChannel)
         }
 
-        // to diaplay notification in DND Mode
+        // To display notification in DND Mode
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_ID)
             channel.canBypassDnd()

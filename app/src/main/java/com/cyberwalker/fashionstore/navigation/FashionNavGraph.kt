@@ -66,7 +66,7 @@ fun FashionNavGraph(
         }
         animatedComposable(Screen.SignUp.route) {
             SignUpScreen(
-                onAction = actions::navigateToSignIn,
+                onAction = actions::navigateToSignIn
             )
         }
 
