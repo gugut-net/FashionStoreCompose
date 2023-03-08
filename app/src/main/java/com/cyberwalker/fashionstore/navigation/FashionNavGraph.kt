@@ -30,16 +30,20 @@ import com.cyberwalker.fashionstore.home.HomeScreen
 import com.cyberwalker.fashionstore.home.HomeScreenActions
 import com.cyberwalker.fashionstore.login.SignInScreen
 import com.cyberwalker.fashionstore.login.SignInScreenActions
+import com.cyberwalker.fashionstore.login.SignUpScreen
+import com.cyberwalker.fashionstore.login.SignUpScreenActions
 import com.cyberwalker.fashionstore.splash.SplashScreen
 import com.cyberwalker.fashionstore.splash.SplashScreenActions
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 sealed class Screen(val name: String, val route: String) {
+
     object Splash : Screen("splash", "splash")
     object Home : Screen("home", "home")
     object Detail : Screen("detail", "detail")
     object SignIn: Screen("signin","signin")
+    object SignUp: Screen("signup","signup")
 
 }
 
@@ -60,6 +64,11 @@ fun FashionNavGraph(
         animatedComposable(Screen.Splash.route) {
             SplashScreen(onAction = actions::navigateToHome)
         }
+        animatedComposable(Screen.SignUp.route) {
+            SignUpScreen(
+                onAction = actions::navigateToSignIn,
+            )
+        }
 
         animatedComposable(Screen.Home.route) {
             HomeScreen(onAction = actions::navigateFromHome,navController = navController)
@@ -70,7 +79,9 @@ fun FashionNavGraph(
         }
 
         animatedComposable(Screen.SignIn.route) {
-            SignInScreen(onAction = actions::navigateFromSignIn)
+            SignInScreen(
+                onAction = actions::navigateFromSignIn,
+                onAction0 = actions::navigateToSignUp)
         }
     }
 }
@@ -102,6 +113,21 @@ class NavActions(private val navController: NavController) {
         when (actions) {
             SignInScreenActions.LoadHome -> {
                 navController.navigate(Screen.Home.name)
+            }
+        }
+    }
+    fun navigateToSignIn(actions: SignUpScreenActions) {
+        when (actions) {
+            SignUpScreenActions.LoadSignUp -> {
+                navController.navigate(Screen.SignIn.name)
+            }
+        }
+    }
+
+    fun navigateToSignUp(_A: SignUpScreenActions) {
+        navController.navigate(Screen.SignUp.name) {
+            popUpTo(Screen.SignIn.route){
+                inclusive = true
             }
         }
     }

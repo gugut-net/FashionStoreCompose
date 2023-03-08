@@ -16,13 +16,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.cyberwalker.fashionstore.R
-import com.cyberwalker.fashionstore.ui.theme.FashionStoreTheme
 import com.cyberwalker.fashionstore.ui.theme.ltgray_dot
 import com.cyberwalker.fashionstore.ui.theme.poppinsFamily
 import com.cyberwalker.fashionstore.utils.Util.ServerClient
@@ -36,7 +33,8 @@ import kotlinx.coroutines.launch
 fun SignInScreen(
     //navController : NavController,
     viewModel: SignInViewModel = hiltViewModel(),
-    onAction: (actions: SignInScreenActions) -> Unit
+    onAction: (actions: SignInScreenActions) -> Unit,
+    onAction0: (actions: SignUpScreenActions) -> Unit
 ) {
 
     val googleSignInState = viewModel.googleState.value
@@ -108,9 +106,9 @@ fun SignInScreen(
                 disabledLabelColor = ltgray_dot,
                 unfocusedIndicatorColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent
-            ), shape = RoundedCornerShape(8.dp), singleLine = true, placeholder = {
-                Text(text = "Password")
-            }
+            ), shape = RoundedCornerShape(8.dp), singleLine = true,
+            label = { Text(text = "Password") },
+            visualTransformation = PasswordVisualTransformation(),
         )
 
         Button(
@@ -148,6 +146,7 @@ fun SignInScreen(
             modifier = Modifier
                 .padding(15.dp)
                 .clickable {
+                    onAction0(SignUpScreenActions.LoadSignUp)
                 },
             text = "New User? Sign Up ",
             fontWeight = FontWeight.Bold,
@@ -212,7 +211,6 @@ fun SignInScreen(
                     }
                 }
             }
-
         }
         Row(
             modifier = Modifier
@@ -228,15 +226,4 @@ fun SignInScreen(
 
 sealed class SignInScreenActions {
     object LoadHome : SignInScreenActions()
-}
-
-
-
-@Preview
-@Composable
-fun SignInScreenPreview() {
-    FashionStoreTheme {
-        SignInScreen(
-            onAction = {})
-    }
 }

@@ -61,12 +61,12 @@ fun DefaultPreview() {
     }
 }
 
-@Preview
-@Composable
-fun SignInScreenPreview() {
-    FashionStoreTheme {
-        SignInScreen(
-
-            onAction = {})
-    }
-}
+//@Preview
+//@Composable
+//fun SignInScreenPreview() {
+//    FashionStoreTheme {
+//        SignInScreen(
+//
+//            onAction = {})
+//    }
+//}
