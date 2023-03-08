@@ -7,15 +7,20 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -54,6 +59,10 @@ fun SignInScreen(
 
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+
+    val emailFocusRequester = remember { FocusRequester() }
+    val passwordFocusRequester = remember { FocusRequester() }
+
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val state = viewModel.signInState.collectAsState(initial = null)
@@ -80,7 +89,9 @@ fun SignInScreen(
             onValueChange = {
                 email = it
             },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .focusRequester(emailFocusRequester)
+                .fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = ltgray_dot,
                 cursorColor = Color.Black,
@@ -89,9 +100,11 @@ fun SignInScreen(
                 focusedIndicatorColor = Color.Transparent
             ), shape = RoundedCornerShape(8.dp),
             singleLine = true,
-            placeholder = {
+            label = {
                 Text(text = "Email")
-            }
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(onNext = { passwordFocusRequester.requestFocus() }),
         )
         Spacer(modifier = Modifier.height(16.dp))
         TextField(
@@ -99,7 +112,9 @@ fun SignInScreen(
             onValueChange = {
                 password = it
             },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .focusRequester(passwordFocusRequester)
+                .fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = ltgray_dot,
                 cursorColor = Color.Black,
@@ -109,6 +124,8 @@ fun SignInScreen(
             ), shape = RoundedCornerShape(8.dp), singleLine = true,
             label = { Text(text = "Password") },
             visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = { /* Do something */ }),
         )
 
         Button(

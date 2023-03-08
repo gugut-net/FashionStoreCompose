@@ -3,11 +3,16 @@ package com.cyberwalker.fashionstore.login
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cyberwalker.fashionstore.data.source.AuthRepository
 import com.cyberwalker.fashionstore.utils.Resource
 import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -19,11 +24,22 @@ class SignInViewModel @Inject constructor(
     private val repository: AuthRepository
 ) : ViewModel() {
 
+    private val auth = Firebase.auth
+
     private val _signInState = Channel<SignInState>()
     val signInState = _signInState.receiveAsFlow()
 
+    private val _user = MutableLiveData<FirebaseUser>()
+    val user: LiveData<FirebaseUser?> = _user
+
     private val _googleState = mutableStateOf(GoogleSignInState())
     val googleState: State<GoogleSignInState> = _googleState
+
+    init {
+        auth.addAuthStateListener { firebaseAuth ->
+            _user.value = firebaseAuth.currentUser
+        }
+    }
 
     fun googleSignIn(credential: AuthCredential) = viewModelScope.launch {
         repository.googleSignIn(credential).collect { result ->

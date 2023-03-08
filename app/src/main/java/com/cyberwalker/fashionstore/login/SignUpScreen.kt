@@ -5,14 +5,19 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -33,6 +38,11 @@ fun SignUpScreen(
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var verifyPassword by rememberSaveable { mutableStateOf("")}
+
+    val emailFocusRequester = remember { FocusRequester() }
+    val passwordFocusRequester = remember { FocusRequester() }
+    val verifyPasswordFocusRequester = remember { FocusRequester() }
+//    val signInButton = remember { FocusRequester() }
 
     val scope = rememberCoroutineScope()
     val state by viewModel.signUpState.collectAsState(initial = null)
@@ -57,7 +67,9 @@ fun SignUpScreen(
             onValueChange = {
                 email = it
             },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .focusRequester(emailFocusRequester)
+                .fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = ltgray_dot,
                 cursorColor = Color.Black,
@@ -68,13 +80,18 @@ fun SignUpScreen(
             singleLine = true,
             placeholder = {
                 Text(text = "Email")
-            }
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(onNext = { passwordFocusRequester.requestFocus() }),
+
         )
         Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = password,
             onValueChange = { password = it },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .focusRequester(passwordFocusRequester)
+                .fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = ltgray_dot,
                 cursorColor = Color.Black,
@@ -86,13 +103,17 @@ fun SignUpScreen(
             singleLine = true,
             label = { Text(text = "Password") },
             visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(onNext = { verifyPasswordFocusRequester.requestFocus() }),
 
         )
         Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = verifyPassword,
             onValueChange = { verifyPassword = it },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .focusRequester(verifyPasswordFocusRequester)
+                .fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = ltgray_dot,
                 cursorColor = Color.Black,
@@ -104,8 +125,9 @@ fun SignUpScreen(
             singleLine = true,
             label = { Text(text = "Verify password") },
             visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+//            keyboardActions = KeyboardActions(onNext = { signInButton.requestFocus()}),
         )
-
         Button(
             onClick = {
                 Firebase.auth.createUserWithEmailAndPassword(email, password)
@@ -120,6 +142,7 @@ fun SignUpScreen(
                     }
             },
             modifier = Modifier
+//                .focusRequester(signInButton)
                 .fillMaxWidth()
                 .padding(top = 20.dp, start = 30.dp, end = 30.dp),
             colors = ButtonDefaults.buttonColors(
@@ -131,7 +154,9 @@ fun SignUpScreen(
             Text(
                 text = "Sign Up",
                 color = Color.White,
-                modifier = Modifier.padding(7.dp)
+                modifier = Modifier
+//                    .focusRequester(signInButton)
+                    .padding(7.dp)
             )
         }
         Row(

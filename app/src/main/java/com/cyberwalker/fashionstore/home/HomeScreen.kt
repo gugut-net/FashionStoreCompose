@@ -35,10 +35,15 @@ import androidx.navigation.NavHostController
 import com.cyberwalker.fashionstore.R
 import com.cyberwalker.fashionstore.dump.BottomNav
 import com.cyberwalker.fashionstore.dump.vertical
+import com.cyberwalker.fashionstore.login.SignInViewModel
 import com.cyberwalker.fashionstore.ui.theme.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @Composable
 fun HomeScreen(
+
     viewModel: HomeViewModel = hiltViewModel(),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     onAction: (actions: HomeScreenActions) -> Unit,
@@ -52,13 +57,17 @@ fun HomeScreen(
     ) { innerPadding ->
         HomeScreenContent(modifier = Modifier.padding(innerPadding), onAction = onAction)
     }
+
 }
 
 @Composable
 private fun HomeScreenContent(
     modifier: Modifier,
+    viewModel: SignInViewModel = hiltViewModel(),
     onAction: (actions: HomeScreenActions) -> Unit,
 ) {
+    val auth: FirebaseAuth = Firebase.auth
+
     Column(
         modifier = modifier
             .fillMaxHeight()
@@ -89,7 +98,7 @@ private fun HomeScreenContent(
             Spacer(modifier = Modifier.size(24.dp))
             Column {
                 Text(text = "Welcome", style = MaterialTheme.typography.small_caption)
-                Text(text = "Hi Babloo", style = MaterialTheme.typography.medium_14)
+                Text(text = "${viewModel.user.value ?: "Guest"}!")
             }
             Spacer(modifier = Modifier.weight(1F))
             Image(
@@ -230,7 +239,8 @@ private fun GridOfImages(onAction: (actions: HomeScreenActions) -> Unit,) {
                     contentDescription = null,
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .padding(end = 8.dp, top = 8.dp).clickable {  }
+                        .padding(end = 8.dp, top = 8.dp)
+                        .clickable { }
                 )
             }
             Spacer(modifier = Modifier.size(8.dp))
@@ -259,7 +269,8 @@ private fun GridOfImages(onAction: (actions: HomeScreenActions) -> Unit,) {
                     contentDescription = null,
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .padding(end = 8.dp, top = 8.dp).clickable {  }
+                        .padding(end = 8.dp, top = 8.dp)
+                        .clickable { }
                 )
             }
             Spacer(modifier = Modifier.size(8.dp))
@@ -290,7 +301,8 @@ private fun GridOfImages(onAction: (actions: HomeScreenActions) -> Unit,) {
                     contentDescription = null,
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .padding(end = 8.dp, top = 8.dp).clickable {  }
+                        .padding(end = 8.dp, top = 8.dp)
+                        .clickable { }
                 )
             }
             Spacer(modifier = Modifier.size(8.dp))
@@ -319,7 +331,8 @@ private fun GridOfImages(onAction: (actions: HomeScreenActions) -> Unit,) {
                     contentDescription = null,
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .padding(end = 8.dp, top = 8.dp).clickable {  }
+                        .padding(end = 8.dp, top = 8.dp)
+                        .clickable { }
                 )
             }
             Spacer(modifier = Modifier.size(8.dp))
