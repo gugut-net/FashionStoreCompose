@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "285977739559-t1dj67dtce2o7acfn6rc2jpk6lvbc9tr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cyberwalker.fashionstore",
+            "certificate_hash": "ac26760142d8ebd1601e4467a0ba73324f8b9885"
+          }
+        },
+        {
           "client_id": "285977739559-l1051p3iiunrndgpeap1ctjc265iqgmc.apps.googleusercontent.com",
           "client_type": 3
         }
