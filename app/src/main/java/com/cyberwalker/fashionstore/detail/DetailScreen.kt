@@ -20,6 +20,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -63,94 +64,105 @@ private fun DetailScreenContent(
     modifier: Modifier,
     onAction: (actions: DetailScreenActions) -> Unit
 ) {
-    Column(
+    LazyColumn(
         modifier = modifier
             .padding(horizontal = 40.dp)
             .fillMaxHeight()
             .semantics { contentDescription = "Detail Screen" }
     ) {
-        Spacer(modifier = Modifier.size(16.dp))
-        ImageBox(onAction = onAction)
-        Spacer(modifier = Modifier.size(24.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .defaultMinSize(minHeight = 228.dp)
-        ) {
-            TabRow()
+        item {
             Spacer(modifier = Modifier.size(16.dp))
-            ProductInfo()
-        }
-        Spacer(modifier = Modifier.size(16.dp))
-        Text(text = "Size", style = MaterialTheme.typography.medium_18)
-        Spacer(modifier = Modifier.size(16.dp))
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Box(
+            ImageBox(onAction = onAction)
+            Spacer(modifier = Modifier.size(24.dp))
+            Row(
                 modifier = Modifier
+                    .fillMaxWidth()
+                    .defaultMinSize(minHeight = 228.dp)
+            ) {
+                TabRow()
+                Spacer(modifier = Modifier.size(16.dp))
+                ProductInfo()
+            }
+            Spacer(modifier = Modifier.size(16.dp))
+            Text(text = "Size", style = MaterialTheme.typography.medium_18)
+            Spacer(modifier = Modifier.size(16.dp))
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(45.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(color = sizeGreen, shape = RoundedCornerShape(12.dp))
+                        .clickable { },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "S", style = MaterialTheme.typography.medium_18_bold.copy(dark))
+                }
+                Box(modifier = Modifier
                     .size(45.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .background(color = sizeGreen, shape = RoundedCornerShape(12.dp))
-                    .clickable { },
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "S", style = MaterialTheme.typography.medium_18_bold.copy(dark))
+                    .clickable { }, contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "M", style = MaterialTheme.typography.medium_18_bold.copy(dark))
+                }
+                Box(modifier = Modifier
+                    .size(56.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(color = highlight, shape = RoundedCornerShape(12.dp))
+                    .clickable { }, contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "L",
+                        style = MaterialTheme.typography.medium_18_bold.copy(color = Color.White)
+                    )
+                }
+                Box(modifier = Modifier
+                    .size(45.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(color = sizeGreen, shape = RoundedCornerShape(12.dp))
+                    .clickable { }, contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "XL", style = MaterialTheme.typography.medium_18_bold.copy(dark))
+                }
             }
-            Box(modifier = Modifier
-                .size(45.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(color = sizeGreen, shape = RoundedCornerShape(12.dp))
-                .clickable { }, contentAlignment = Alignment.Center) {
-                Text(text = "M", style = MaterialTheme.typography.medium_18_bold.copy(dark))
+            Spacer(modifier = Modifier.size(24.dp))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Column {
+                    Text(text = "Price", style = MaterialTheme.typography.caption.copy(gray))
+                    Spacer(modifier = Modifier.size(4.dp))
+                    Text(text = "₹1284", style = MaterialTheme.typography.medium_18)
+                }
+                Button(
+                    onClick = { },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = highlight),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier
+                        .widthIn(170.dp)
+                        .defaultMinSize(minHeight = 40.dp)
+                ) {
+                    Text(
+                        text = "Add To Cart",
+                        textAlign = TextAlign.Start,
+                        fontSize = 18.sp,
+                        fontFamily = poppinsFamily,
+                        color = Color.White
+                    )
+                }
             }
-            Box(modifier = Modifier
-                .size(56.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(color = highlight, shape = RoundedCornerShape(12.dp))
-                .clickable { }, contentAlignment = Alignment.Center) {
-                Text(text = "L", style = MaterialTheme.typography.medium_18_bold.copy(color = Color.White))
-            }
-            Box(modifier = Modifier
-                .size(45.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(color = sizeGreen, shape = RoundedCornerShape(12.dp))
-                .clickable { }, contentAlignment = Alignment.Center) {
-                Text(text = "XL", style = MaterialTheme.typography.medium_18_bold.copy(dark))
-            }
+            Spacer(modifier = Modifier.size(16.dp))
         }
-        Spacer(modifier = Modifier.weight(1F))
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-           Column {
-               Text(text = "Price", style = MaterialTheme.typography.caption.copy(gray))
-               Spacer(modifier = Modifier.size(4.dp))
-               Text(text = "₹1284", style = MaterialTheme.typography.medium_18)
-           }
-            Button(
-                onClick = { },
-                colors = ButtonDefaults.buttonColors(backgroundColor = highlight),
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .widthIn(170.dp)
-                    .defaultMinSize(minHeight = 40.dp)
-            ) {
-                Text(
-                    text = "Add To Cart",
-                    textAlign = TextAlign.Start,
-                    fontSize = 18.sp,
-                    fontFamily = poppinsFamily,
-                    color = Color.White
-                )
-            }
-        }
-        Spacer(modifier = Modifier.size(16.dp))
     }
 }
 
 @Composable
 fun ProductInfo() {
-    Column() {
+    Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,

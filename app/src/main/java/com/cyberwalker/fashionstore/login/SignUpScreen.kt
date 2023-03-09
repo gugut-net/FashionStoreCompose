@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -47,137 +48,140 @@ fun SignUpScreen(
     val scope = rememberCoroutineScope()
     val state by viewModel.signUpState.collectAsState(initial = null)
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(start = 30.dp, end = 30.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Image(
-            painter = painterResource(id = R.mipmap.ic_launcher),
-            contentDescription = "Logo",
-            modifier = Modifier
-                .height(200.dp)
-                .size(150.dp)
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        TextField(
-            value = email,
-            onValueChange = {
-                email = it
-            },
-            modifier = Modifier
-                .focusRequester(emailFocusRequester)
-                .fillMaxWidth(),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = ltgray_dot,
-                cursorColor = Color.Black,
-                disabledLabelColor = ltgray_dot,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent
-            ), shape = RoundedCornerShape(8.dp),
-            singleLine = true,
-            placeholder = {
-                Text(text = "Email")
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-            keyboardActions = KeyboardActions(onNext = { passwordFocusRequester.requestFocus() }),
-
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            modifier = Modifier
-                .focusRequester(passwordFocusRequester)
-                .fillMaxWidth(),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = ltgray_dot,
-                cursorColor = Color.Black,
-                disabledLabelColor = ltgray_dot,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent
-            ),
-            shape = RoundedCornerShape(8.dp),
-            singleLine = true,
-            label = { Text(text = "Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-            keyboardActions = KeyboardActions(onNext = { verifyPasswordFocusRequester.requestFocus() }),
-
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        TextField(
-            value = verifyPassword,
-            onValueChange = { verifyPassword = it },
-            modifier = Modifier
-                .focusRequester(verifyPasswordFocusRequester)
-                .fillMaxWidth(),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = ltgray_dot,
-                cursorColor = Color.Black,
-                disabledLabelColor = ltgray_dot,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent
-            ),
-            shape = RoundedCornerShape(8.dp),
-            singleLine = true,
-            label = { Text(text = "Verify password") },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-//            keyboardActions = KeyboardActions(onNext = { signInButton.requestFocus()}),
-        )
-        Button(
-            onClick = {
-                Firebase.auth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            onAction(SignUpScreenActions.LoadSignUp)
-                            Log.d("Welcome", "Signup successful")
-                        } else {
-                            // Handle signup failure
-                            Log.e("Sorry", "Signup failed: ${task.exception}")
-                        }
-                    }
-            },
-            modifier = Modifier
-//                .focusRequester(signInButton)
-                .fillMaxWidth()
-                .padding(top = 20.dp, start = 30.dp, end = 30.dp),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color.Blue,
-                contentColor = Color.White
-            ),
-            shape = RoundedCornerShape(15.dp)
-        ) {
-            Text(
-                text = "Sign Up",
-                color = Color.White,
+        item {
+            Image(
+                painter = painterResource(id = R.mipmap.ic_launcher),
+                contentDescription = "Logo",
                 modifier = Modifier
+                    .height(200.dp)
+                    .size(150.dp)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            TextField(
+                value = email,
+                onValueChange = {
+                    email = it
+                },
+                modifier = Modifier
+                    .focusRequester(emailFocusRequester)
+                    .fillMaxWidth(),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = ltgray_dot,
+                    cursorColor = Color.Black,
+                    disabledLabelColor = ltgray_dot,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent
+                ),
+                shape = RoundedCornerShape(8.dp),
+                singleLine = true,
+                placeholder = {
+                    Text(text = "Email")
+                },
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(onNext = { passwordFocusRequester.requestFocus() }),
+
+                )
+            Spacer(modifier = Modifier.height(16.dp))
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                modifier = Modifier
+                    .focusRequester(passwordFocusRequester)
+                    .fillMaxWidth(),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = ltgray_dot,
+                    cursorColor = Color.Black,
+                    disabledLabelColor = ltgray_dot,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent
+                ),
+                shape = RoundedCornerShape(8.dp),
+                singleLine = true,
+                label = { Text(text = "Password") },
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(onNext = { verifyPasswordFocusRequester.requestFocus() }),
+
+                )
+            Spacer(modifier = Modifier.height(16.dp))
+            TextField(
+                value = verifyPassword,
+                onValueChange = { verifyPassword = it },
+                modifier = Modifier
+                    .focusRequester(verifyPasswordFocusRequester)
+                    .fillMaxWidth(),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = ltgray_dot,
+                    cursorColor = Color.Black,
+                    disabledLabelColor = ltgray_dot,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent
+                ),
+                shape = RoundedCornerShape(8.dp),
+                singleLine = true,
+                label = { Text(text = "Verify password") },
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+//            keyboardActions = KeyboardActions(onNext = { signInButton.requestFocus()}),
+            )
+            Button(
+                onClick = {
+                    Firebase.auth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                onAction(SignUpScreenActions.LoadSignUp)
+                                Log.d("Welcome", "Signup successful")
+                            } else {
+                                // Handle signup failure
+                                Log.e("Sorry", "Signup failed: ${task.exception}")
+                            }
+                        }
+                },
+                modifier = Modifier
+//                .focusRequester(signInButton)
+                    .fillMaxWidth()
+                    .padding(top = 20.dp, start = 30.dp, end = 30.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Blue,
+                    contentColor = Color.White
+                ),
+                shape = RoundedCornerShape(15.dp)
+            ) {
+                Text(
+                    text = "Sign Up",
+                    color = Color.White,
+                    modifier = Modifier
 //                    .focusRequester(signInButton)
-                    .padding(7.dp)
+                        .padding(7.dp)
+                )
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                if (state?.isLoading == true) {
+                    CircularProgressIndicator()
+                }
+            }
+            Text(
+                text = "Already have an account? Sign In",
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                fontFamily = poppinsFamily,
+                modifier = Modifier
+                    .clickable {
+                        onAction(SignUpScreenActions.LoadSignUp)
+                    }
+                    .padding(15.dp)
             )
         }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            if (state?.isLoading == true) {
-                CircularProgressIndicator()
-            }
-        }
-        Text(
-            text = "Already have an account? Sign In",
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            fontFamily = poppinsFamily,
-            modifier = Modifier
-                .clickable {
-                    onAction(SignUpScreenActions.LoadSignUp)
-                }
-                .padding(15.dp)
-        )
     }
 }
 sealed class SignUpScreenActions {

@@ -6,6 +6,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -67,7 +68,7 @@ fun SignInScreen(
     val context = LocalContext.current
     val state = viewModel.signInState.collectAsState(initial = null)
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(start = 30.dp, end = 30.dp),
@@ -75,122 +76,128 @@ fun SignInScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
-        Image(
-            painter = painterResource
-                (id = R.mipmap.ic_launcher),
-            contentDescription = "Logo",
-            modifier = Modifier
-                .height(200.dp)
-                .size(150.dp)
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        TextField(
-            value = email,
-            onValueChange = {
-                email = it
-            },
-            modifier = Modifier
-                .focusRequester(emailFocusRequester)
-                .fillMaxWidth(),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = ltgray_dot,
-                cursorColor = Color.Black,
-                disabledLabelColor = ltgray_dot,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent
-            ), shape = RoundedCornerShape(8.dp),
-            singleLine = true,
-            label = {
-                Text(text = "Email")
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-            keyboardActions = KeyboardActions(onNext = { passwordFocusRequester.requestFocus() }),
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        TextField(
-            value = password,
-            onValueChange = {
-                password = it
-            },
-            modifier = Modifier
-                .focusRequester(passwordFocusRequester)
-                .fillMaxWidth(),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = ltgray_dot,
-                cursorColor = Color.Black,
-                disabledLabelColor = ltgray_dot,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent
-            ), shape = RoundedCornerShape(8.dp), singleLine = true,
-            label = { Text(text = "Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { /* Do something */ }),
-        )
-
-        Button(
-            onClick = {
-                scope.launch {
-                    viewModel.loginUser(email, password)
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 20.dp, start = 30.dp, end = 30.dp),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color.Blue,
-                contentColor = Color.White
-            ),
-            shape = RoundedCornerShape(15.dp)
-        ) {
-            Text(
-                text = "Sign In", 
-                color = Color.White, 
+        item {
+            Image(
+                painter = painterResource
+                    (id = R.mipmap.ic_launcher),
+                contentDescription = "Logo",
                 modifier = Modifier
-                    .padding(7.dp))
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(), 
-            horizontalArrangement = Arrangement.Center) 
-        {
-            if (state.value?.isLoading == true) {
-                CircularProgressIndicator()
-            }
-
-        }
-        Text(
-            modifier = Modifier
-                .padding(15.dp)
-                .clickable {
-                    onAction0(SignUpScreenActions.LoadSignUp)
+                    .height(200.dp)
+                    .size(150.dp)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            TextField(
+                value = email,
+                onValueChange = {
+                    email = it
                 },
-            text = "New User? Sign Up ",
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            fontFamily = poppinsFamily
-        )
-        Text(
-            text = "or connect with",
-            fontWeight = FontWeight.Medium,
-            color = Color.White)
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            IconButton(onClick = {
-                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken(ServerClient)
-                    .requestEmail()
-                    .build()
+                modifier = Modifier
+                    .focusRequester(emailFocusRequester)
+                    .fillMaxWidth(),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = ltgray_dot,
+                    cursorColor = Color.Black,
+                    disabledLabelColor = ltgray_dot,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent
+                ),
+                shape = RoundedCornerShape(8.dp),
+                singleLine = true,
+                label = {
+                    Text(text = "Email")
+                },
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(onNext = { passwordFocusRequester.requestFocus() }),
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            TextField(
+                value = password,
+                onValueChange = {
+                    password = it
+                },
+                modifier = Modifier
+                    .focusRequester(passwordFocusRequester)
+                    .fillMaxWidth(),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = ltgray_dot,
+                    cursorColor = Color.Black,
+                    disabledLabelColor = ltgray_dot,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent
+                ),
+                shape = RoundedCornerShape(8.dp), singleLine = true,
+                label = { Text(text = "Password") },
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { /* Do something */ }),
+            )
 
-                val googleSignInClient = GoogleSignIn.getClient(context, gso)
+            Button(
+                onClick = {
+                    scope.launch {
+                        viewModel.loginUser(email, password)
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp, start = 30.dp, end = 30.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Blue,
+                    contentColor = Color.White
+                ),
+                shape = RoundedCornerShape(15.dp)
+            ) {
+                Text(
+                    text = "Sign In",
+                    color = Color.White,
+                    modifier = Modifier
+                        .padding(7.dp)
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            )
+            {
+                if (state.value?.isLoading == true) {
+                    CircularProgressIndicator()
+                }
 
-                launcher.launch(googleSignInClient.signInIntent)
+            }
+            Text(
+                modifier = Modifier
+                    .padding(15.dp)
+                    .clickable {
+                        onAction0(SignUpScreenActions.LoadSignUp)
+                    },
+                text = "New User? Sign Up ",
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                fontFamily = poppinsFamily
+            )
+            Text(
+                text = "or connect with",
+                fontWeight = FontWeight.Medium,
+                color = Color.White
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                IconButton(onClick = {
+                    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(ServerClient)
+                        .requestEmail()
+                        .build()
 
-            }) {
+                    val googleSignInClient = GoogleSignIn.getClient(context, gso)
+
+                    launcher.launch(googleSignInClient.signInIntent)
+
+                }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_google),
                         contentDescription = "Google Icon",
@@ -201,41 +208,43 @@ fun SignInScreen(
 //                            .height(20.dp),
                         tint = Color.Unspecified
                     )
-            }
-            LaunchedEffect(key1 = state.value?.isSuccess) {
-                scope.launch {
-                    if (state.value?.isSuccess?.isNotEmpty() == true) {
-                        val success = state.value?.isSuccess
-                        onAction(SignInScreenActions.LoadHome)
+                }
+                LaunchedEffect(key1 = state.value?.isSuccess) {
+                    scope.launch {
+                        if (state.value?.isSuccess?.isNotEmpty() == true) {
+                            val success = state.value?.isSuccess
+                            onAction(SignInScreenActions.LoadHome)
+                        }
                     }
                 }
-            }
 
-            LaunchedEffect(key1 = state.value?.isError) {
-                scope.launch {
-                    if (state.value?.isError?.isNotEmpty() == true) {
-                        val error = state.value?.isError
-                        Toast.makeText(context, "$error", Toast.LENGTH_LONG).show()
+                LaunchedEffect(key1 = state.value?.isError) {
+                    scope.launch {
+                        if (state.value?.isError?.isNotEmpty() == true) {
+                            val error = state.value?.isError
+                            Toast.makeText(context, "$error", Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
-            }
 
-            LaunchedEffect(key1 = googleSignInState.success) {
-                scope.launch {
-                    if (googleSignInState.success != null) {
-                        Toast.makeText(context, "Sign In Success", Toast.LENGTH_LONG).show()
-                        onAction(SignInScreenActions.LoadHome)
+                LaunchedEffect(key1 = googleSignInState.success) {
+                    scope.launch {
+                        if (googleSignInState.success != null) {
+                            Toast.makeText(context, "Sign In Success", Toast.LENGTH_LONG).show()
+                            onAction(SignInScreenActions.LoadHome)
+                        }
                     }
                 }
             }
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center)
-        {
-            if (googleSignInState.loading){
-                CircularProgressIndicator()
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            )
+            {
+                if (googleSignInState.loading) {
+                    CircularProgressIndicator()
+                }
             }
         }
     }
