@@ -24,7 +24,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -64,6 +64,8 @@ private fun DetailScreenContent(
     modifier: Modifier,
     onAction: (actions: DetailScreenActions) -> Unit
 ) {
+    var isClicked by remember { mutableStateOf("") }
+
     LazyColumn(
         modifier = modifier
             .padding(horizontal = 40.dp)
@@ -97,36 +99,56 @@ private fun DetailScreenContent(
                     modifier = Modifier
                         .size(45.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(color = sizeGreen, shape = RoundedCornerShape(12.dp))
-                        .clickable { },
+                        .background(
+                            color = if (isClicked == "S") highlight else sizeGreen,
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .clickable {
+                            isClicked = "S"
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(text = "S", style = MaterialTheme.typography.medium_18_bold.copy(dark))
                 }
-                Box(modifier = Modifier
-                    .size(45.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(color = sizeGreen, shape = RoundedCornerShape(12.dp))
-                    .clickable { }, contentAlignment = Alignment.Center
+                Box(
+                    modifier = Modifier
+                        .size(45.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(
+                            color = if (isClicked == "M") highlight else sizeGreen,
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .clickable {
+                            isClicked = "M"
+                        }, contentAlignment = Alignment.Center
                 ) {
                     Text(text = "M", style = MaterialTheme.typography.medium_18_bold.copy(dark))
                 }
-                Box(modifier = Modifier
-                    .size(56.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(color = highlight, shape = RoundedCornerShape(12.dp))
-                    .clickable { }, contentAlignment = Alignment.Center
+                Box(
+                    modifier = Modifier
+                        .size(45.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(
+                            color = if (isClicked == "L") highlight else sizeGreen,
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .clickable {
+                            isClicked = "L"
+                        }, contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "L",
-                        style = MaterialTheme.typography.medium_18_bold.copy(color = Color.White)
-                    )
+                    Text(text = "L", style = MaterialTheme.typography.medium_18_bold.copy(dark))
                 }
-                Box(modifier = Modifier
-                    .size(45.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(color = sizeGreen, shape = RoundedCornerShape(12.dp))
-                    .clickable { }, contentAlignment = Alignment.Center
+                Box(
+                    modifier = Modifier
+                        .size(45.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(
+                            color = if (isClicked == "XL") highlight else sizeGreen,
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .clickable {
+                            isClicked = "XL"
+                        }, contentAlignment = Alignment.Center
                 ) {
                     Text(text = "XL", style = MaterialTheme.typography.medium_18_bold.copy(dark))
                 }
@@ -136,7 +158,21 @@ private fun DetailScreenContent(
                 Column {
                     Text(text = "Price", style = MaterialTheme.typography.caption.copy(gray))
                     Spacer(modifier = Modifier.size(4.dp))
-                    Text(text = "₹1284", style = MaterialTheme.typography.medium_18)
+                    Text(
+
+                        text = when (isClicked) {
+                            "S" -> { "$20" }
+
+                            "M" -> { "$30" }
+
+                            "L" -> { "$40" }
+
+                            "XL" -> { "$50" }
+
+                            else -> { "$0" }
+
+                        }, style = MaterialTheme.typography.medium_18
+                    )
                 }
                 Button(
                     onClick = { },
