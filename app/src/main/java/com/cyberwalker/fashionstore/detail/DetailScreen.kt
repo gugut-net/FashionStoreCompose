@@ -286,42 +286,105 @@ private fun ImageBox(onAction: (actions: DetailScreenActions) -> Unit) {
 
 @Composable
 private fun TabRow() {
+
+    var colorSelected by remember { mutableStateOf("") }
+
     Row(
         modifier = Modifier
             .vertical()
             .rotate(-90F), verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(
+        Box(
             modifier = Modifier
                 .size(30.dp)
-                .background(color = cardColorBlue, shape = CircleShape)
-        )
-        Spacer(modifier = Modifier.size(16.dp))
-        Spacer(
-            modifier = Modifier
-                .size(30.dp)
-                .background(color = cardColorGreen, shape = CircleShape)
-        )
+                .background(
+                    color = cardColorBlue ,
+                    shape = CircleShape
+                )
+                .clickable { colorSelected = "blue" }
+        ) {
+            if (colorSelected == "blue" ) {
+                Image(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .rotate(90F),
+                    painter = painterResource(
+                        id = R.drawable.ic_tick,
+                    ),
+                    contentDescription = null
+                )
+            }
+        }
+
         Spacer(modifier = Modifier.size(16.dp))
         Box(
             modifier = Modifier
                 .size(30.dp)
-                .background(color = cardColorPeach, shape = CircleShape)
+                .background(
+                    color = cardColorGreen ,
+                    shape = CircleShape
+                )
+                .clickable { colorSelected = "green" }
         ) {
-            Image(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .rotate(90F),
-                painter = painterResource(id = R.drawable.ic_tick),
-                contentDescription = null
-            )
+            if (colorSelected == "green" ) {
+                Image(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .rotate(90F),
+                    painter = painterResource(
+                        id = R.drawable.ic_tick,
+                    ),
+                    contentDescription = null
+                )
+            }
         }
+
+
         Spacer(modifier = Modifier.size(16.dp))
-        Spacer(
+        Box(
             modifier = Modifier
                 .size(30.dp)
-                .background(color = cardColorYellow, shape = CircleShape)
-        )
+                .background(
+                    color = cardColorPeach,
+                    shape = CircleShape
+                )
+                .clickable { colorSelected = "peach" }
+        ) {
+            if (colorSelected == "peach" ) {
+                Image(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .rotate(90F),
+                    painter = painterResource(
+                        id = R.drawable.ic_tick,
+                    ),
+                    contentDescription = null
+                )
+            }
+        }
+        Spacer(modifier = Modifier.size(16.dp))
+        Box(
+            modifier = Modifier
+                .size(30.dp)
+                .background(
+                    color =  cardColorYellow,
+                    shape = CircleShape
+                )
+                .clickable { colorSelected = "yellow" }
+        ) {
+            if (colorSelected == "yellow" ) {
+                Image(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .rotate(90F),
+                    painter = painterResource(
+                        id = R.drawable.ic_tick,
+                    ),
+                    contentDescription = null
+                )
+            }
+        }
+
     }
 }
 
