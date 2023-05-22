@@ -173,7 +173,7 @@ fun SignUpScreen(
             Text(
                 text = "Already have an account? Sign In",
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                color = Color.Blue,
                 fontFamily = poppinsFamily,
                 modifier = Modifier
                     .clickable {

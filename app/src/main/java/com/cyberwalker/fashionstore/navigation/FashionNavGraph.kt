@@ -23,15 +23,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.cyberwalker.fashionstore.cart.CartScreen
+import com.cyberwalker.fashionstore.cart.CartScreenActions
 import com.cyberwalker.fashionstore.detail.DetailScreen
 import com.cyberwalker.fashionstore.detail.DetailScreenActions
 import com.cyberwalker.fashionstore.dump.animatedComposable
 import com.cyberwalker.fashionstore.home.HomeScreen
 import com.cyberwalker.fashionstore.home.HomeScreenActions
+import com.cyberwalker.fashionstore.liked.LikedScreen
+import com.cyberwalker.fashionstore.liked.LikedScreenActions
 import com.cyberwalker.fashionstore.login.SignInScreen
 import com.cyberwalker.fashionstore.login.SignInScreenActions
 import com.cyberwalker.fashionstore.login.SignUpScreen
 import com.cyberwalker.fashionstore.login.SignUpScreenActions
+import com.cyberwalker.fashionstore.profile.ProfileScreen
+import com.cyberwalker.fashionstore.profile.ProfileScreenActions
+import com.cyberwalker.fashionstore.promo.PromoScreen
+import com.cyberwalker.fashionstore.promo.PromoScreenActions
+import com.cyberwalker.fashionstore.search.SearchScreen
+import com.cyberwalker.fashionstore.search.SearchScreenActions
 import com.cyberwalker.fashionstore.splash.SplashScreen
 import com.cyberwalker.fashionstore.splash.SplashScreenActions
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -44,6 +54,11 @@ sealed class Screen(val name: String, val route: String) {
     object Detail : Screen("detail", "detail")
     object SignIn: Screen("signin","signin")
     object SignUp: Screen("signup","signup")
+    object Profile: Screen("profile", "profile")
+    object Search: Screen("search", "search")
+    object Liked: Screen("liked", "liked")
+    object Promo: Screen("promo", "promo")
+    object Cart: Screen("cart", "cart")
 
 }
 
@@ -62,20 +77,49 @@ fun FashionNavGraph(
         modifier = modifier
     ) {
         animatedComposable(Screen.Splash.route) {
-            SplashScreen(onAction = actions::navigateToHome)
+            SplashScreen(
+                onAction = actions::navigateToHome)
         }
         animatedComposable(Screen.SignUp.route) {
             SignUpScreen(
-                onAction = actions::navigateToSignIn
-            )
+                onAction = actions::navigateToSignIn)
         }
 
         animatedComposable(Screen.Home.route) {
-            HomeScreen(onAction = actions::navigateFromHome,navController = navController)
+            HomeScreen(
+                onAction = actions::navigateFromHome,
+                navController = navController)
         }
 
         animatedComposable(Screen.Detail.route) {
-            DetailScreen(onAction = actions::navigateFromDetails)
+            DetailScreen(
+                onAction = actions::navigateFromDetails)
+        }
+        animatedComposable(Screen.Liked.route) {
+            LikedScreen(
+                onAction = actions::navigateToLiked,
+                navController = navController)
+        }
+        animatedComposable(Screen.Cart.route) {
+            CartScreen(
+                onAction = actions::navigateToCart,
+                navController = navController)
+        }
+        animatedComposable(Screen.Search.route) {
+            SearchScreen(
+                onAction = actions::navigateToSearch,
+                navController = navController)
+        }
+        animatedComposable(Screen.Profile.route) {
+            ProfileScreen(
+                onAction = actions::navigateToProfile,
+                navController = navController)
+        }
+
+        animatedComposable(Screen.Promo.route) {
+            PromoScreen(
+                onAction = actions::navigateToPromo,
+                navController = navController)
         }
 
         animatedComposable(Screen.SignIn.route) {
@@ -108,7 +152,41 @@ class NavActions(private val navController: NavController) {
             DetailScreenActions.Back -> navController.popBackStack()
         }
     }
-
+    fun navigateToLiked(actions: LikedScreenActions) {
+        when(actions) {
+            LikedScreenActions.LoadLiked -> {
+                navController.navigate(Screen.Liked.name)
+            }
+        }
+    }
+    fun navigateToCart(actions: CartScreenActions) {
+        when(actions) {
+            CartScreenActions.LoadCart -> {
+                navController.navigate(Screen.Cart.name)
+            }
+        }
+    }
+    fun navigateToSearch(actions: SearchScreenActions) {
+        when(actions) {
+            SearchScreenActions.LoadSearch -> {
+                navController.navigate(Screen.Search.name)
+            }
+        }
+    }
+    fun navigateToPromo(actions: PromoScreenActions) {
+        when(actions) {
+            PromoScreenActions.LoadPromo -> {
+                navController.navigate(Screen.Promo.name)
+            }
+        }
+    }
+    fun navigateToProfile(actions: ProfileScreenActions) {
+        when(actions) {
+            ProfileScreenActions.LoadProfile -> {
+                navController.navigate(Screen.Profile.name)
+            }
+        }
+    }
     fun navigateFromSignIn(actions: SignInScreenActions) {
         when (actions) {
             SignInScreenActions.LoadHome -> {
@@ -123,7 +201,6 @@ class NavActions(private val navController: NavController) {
             }
         }
     }
-
     fun navigateToSignUp(_A: SignUpScreenActions) {
         navController.navigate(Screen.SignUp.name) {
             popUpTo(Screen.SignIn.route){
@@ -131,4 +208,12 @@ class NavActions(private val navController: NavController) {
             }
         }
     }
+
+//    fun navigateFromSearch(actions: SearchScreenActions) {
+//        when (actions) {
+//            SearchScreenActions.Home -> {
+//                navController.navigate(Screen.Detail.name)
+//            }
+//        }
+//    }
 }

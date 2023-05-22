@@ -37,6 +37,7 @@ fun BottomNav(navController: NavController, isDark: Boolean = isSystemInDarkThem
         BottomNavItem.Home,
         BottomNavItem.Search,
         BottomNavItem.Liked,
+        BottomNavItem.Cart,
         BottomNavItem.Profile,
     )
     BottomNavigation(
@@ -53,6 +54,24 @@ fun BottomNav(navController: NavController, isDark: Boolean = isSystemInDarkThem
                 alwaysShowLabel = false,
                 selected = currentRoute == item.screen_route,
                 onClick = {
+                    when(item) {
+                        BottomNavItem.Home -> {
+                            navController.navigate(BottomNavItem.Home.screen_route)
+                        }
+                        BottomNavItem.Search -> {
+                            navController.navigate(BottomNavItem.Search.screen_route)
+                        }
+                        BottomNavItem.Liked -> {
+                            navController.navigate(BottomNavItem.Liked.screen_route)
+                        }
+                        BottomNavItem.Cart -> {
+                            navController.navigate(BottomNavItem.Cart.screen_route)
+                        }
+                        BottomNavItem.Profile -> {
+                            navController.navigate(BottomNavItem.Profile.screen_route)
+                        }
+                        else -> {}
+                    }
 
                 }
             )
@@ -65,5 +84,6 @@ sealed class BottomNavItem(var title: String, var icon: Int, var screen_route: S
     object Home : BottomNavItem("Home", R.drawable.home, Screen.Home.route)
     object Search : BottomNavItem("Search", R.drawable.search, "Search")
     object Liked : BottomNavItem("Liked", R.drawable.liked, "Liked")
+    object Cart : BottomNavItem("Cart", R.drawable.cart, "Cart")
     object Profile : BottomNavItem("Profile", R.drawable.profile, "Profile")
 }

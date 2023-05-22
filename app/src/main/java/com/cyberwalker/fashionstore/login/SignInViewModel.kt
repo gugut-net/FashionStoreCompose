@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cyberwalker.fashionstore.data.source.AuthRepository
 import com.cyberwalker.fashionstore.utils.Resource
+import com.facebook.AccessToken
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -35,6 +36,10 @@ class SignInViewModel @Inject constructor(
     private val _googleState = mutableStateOf(GoogleSignInState())
     val googleState: State<GoogleSignInState> = _googleState
 
+//    private val _facebookState = mutableStateOf(FacebookSignInState())
+//    val facebookState: State<FacebookSignInState> = _facebookState
+
+
     init {
         auth.addAuthStateListener { firebaseAuth ->
             _user.value = firebaseAuth.currentUser
@@ -58,6 +63,23 @@ class SignInViewModel @Inject constructor(
         }
     }
 
+//    fun facebookSignIn(token: AccessToken) = viewModelScope.launch {
+//        repository.facebookSignIn(token).collect { result ->
+//            when (result) {
+//                is Resource.Success -> {
+//                    _facebookState.value = FacebookSignInState(success = result.data)
+//                }
+//                is Resource.Loading -> {
+//                    _facebookState.value = FacebookSignInState(loading = true)
+//                }
+//                is Resource.Error -> {
+//                    _facebookState.value = FacebookSignInState(error = result.message!!)
+//                }
+//            }
+//        }
+//    }
+
+
     fun loginUser(email: String, password: String) = viewModelScope.launch {
         repository.loginUser(email, password).collect { result ->
             when (result) {
@@ -74,6 +96,10 @@ class SignInViewModel @Inject constructor(
             }
 
         }
+    }
+
+    fun getUser(): String? {
+        return auth.currentUser?.email
     }
 
 }

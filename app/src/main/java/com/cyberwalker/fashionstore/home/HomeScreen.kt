@@ -98,7 +98,7 @@ private fun HomeScreenContent(
             Spacer(modifier = Modifier.size(24.dp))
             Column {
                 Text(text = "Welcome", style = MaterialTheme.typography.small_caption)
-                Text(text = "${viewModel.user.value ?: "Guest"}!")
+                Text(text = "${viewModel.getUser() ?: "Guest"}!")
             }
             Spacer(modifier = Modifier.weight(1F))
             Image(

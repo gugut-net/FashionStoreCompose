@@ -1,8 +1,10 @@
 package com.cyberwalker.fashionstore.login
 
+import android.app.Activity
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,10 +13,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -23,12 +27,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cyberwalker.fashionstore.R
 import com.cyberwalker.fashionstore.ui.theme.ltgray_dot
 import com.cyberwalker.fashionstore.ui.theme.poppinsFamily
 import com.cyberwalker.fashionstore.utils.Util.ServerClient
+import com.facebook.CallbackManager
+import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -131,7 +139,6 @@ fun SignInScreen(
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { /* Do something */ }),
             )
-
             Button(
                 onClick = {
                     scope.launch {
@@ -173,75 +180,176 @@ fun SignInScreen(
                     },
                 text = "New User? Sign Up ",
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                color = Color.Blue,
                 fontFamily = poppinsFamily
             )
             Text(
                 text = "or connect with",
                 fontWeight = FontWeight.Medium,
-                color = Color.White
+                color = Color.Black
             )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp),
-                horizontalArrangement = Arrangement.Center
+            /**
+             * Google button
+             */
+            Row(Modifier.fillMaxWidth()
+                .padding(top = 20.dp, start = 30.dp, end = 30.dp),
             ) {
-                IconButton(onClick = {
-                    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(ServerClient)
-                        .requestEmail()
-                        .build()
+                Spacer(modifier = Modifier.weight(1f))
+                Button(
+                    onClick = {
+                        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                            .requestIdToken(ServerClient)
+                            .requestEmail()
+                            .build()
 
-                    val googleSignInClient = GoogleSignIn.getClient(context, gso)
+                        val googleSignInClient = GoogleSignIn.getClient(context, gso)
 
-                    launcher.launch(googleSignInClient.signInIntent)
+                        launcher.launch(googleSignInClient.signInIntent)
 
-                }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_google),
-                        contentDescription = "Google Icon",
+                    },
+                    modifier = Modifier
+                        .weight(8f)
+                        .shadow(0.dp),
+                    elevation = ButtonDefaults.elevation(
+                        defaultElevation = 0.dp,
+                        pressedElevation = 0.dp,
+                        hoveredElevation = 0.dp,
+                        focusedElevation = 0.dp
+                    ),
+                    shape = RoundedCornerShape(15.dp),
+                    contentPadding = PaddingValues(10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color.White,
+                        contentColor = Color.Red
+                    ),
+                    border = BorderStroke(1.dp, backgroundColor)
+
+                ) {
+                    Box(
                         modifier = Modifier
-                            .padding(top = 20.dp, start = 30.dp, end = 30.dp),
-//                            .size(100.dp)
-//                            .width(50.dp)
-//                            .height(20.dp),
-                        tint = Color.Unspecified
-                    )
-                }
-                LaunchedEffect(key1 = state.value?.isSuccess) {
-                    scope.launch {
-                        if (state.value?.isSuccess?.isNotEmpty() == true) {
-                            val success = state.value?.isSuccess
-                            onAction(SignInScreenActions.LoadHome)
+                            .fillMaxWidth()
+                            .height(15.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.CenterStart)
+                        ) {
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_google),
+                                contentDescription = "drawable_icons",
+                                modifier = Modifier
+                                    .size(38.dp),
+                                tint = Color.Unspecified
+                            )
                         }
-                    }
-                }
+                            Text(modifier = Modifier.align(Alignment.Center),
+                                text = "Google",
+                                color = backgroundColor,
+                                textAlign = TextAlign.Center,
+                                fontSize = 15.sp,
+                            )
+                        }
+                        LaunchedEffect(key1 = state.value?.isSuccess) {
+                            scope.launch {
+                                if (state.value?.isSuccess?.isNotEmpty() == true) {
+                                    val success = state.value?.isSuccess
+                                    onAction(SignInScreenActions.LoadHome)
+                                }
+                            }
+                        }
 
-                LaunchedEffect(key1 = state.value?.isError) {
-                    scope.launch {
-                        if (state.value?.isError?.isNotEmpty() == true) {
-                            val error = state.value?.isError
-                            Toast.makeText(context, "$error", Toast.LENGTH_LONG).show()
+                        LaunchedEffect(key1 = state.value?.isError) {
+                            scope.launch {
+                                if (state.value?.isError?.isNotEmpty() == true) {
+                                    val error = state.value?.isError
+                                    Toast.makeText(context, "$error", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        }
+                        LaunchedEffect(key1 = googleSignInState.success) {
+                            scope.launch {
+                                if (googleSignInState.success != null) {
+                                    Toast.makeText(context, "Sign In Success", Toast.LENGTH_LONG)
+                                        .show()
+                                    onAction(SignInScreenActions.LoadHome)
+                                }
+                            }
                         }
                     }
-                }
+                Spacer(modifier = Modifier.weight(1f))
+            }
+            /**
+             * Facebook Signing
+             */
 
-                LaunchedEffect(key1 = googleSignInState.success) {
-                    scope.launch {
-                        if (googleSignInState.success != null) {
-                            Toast.makeText(context, "Sign In Success", Toast.LENGTH_LONG).show()
-                            onAction(SignInScreenActions.LoadHome)
+            Row(Modifier.fillMaxWidth()
+                .padding(top = 20.dp, start = 30.dp, end = 30.dp),
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+                Button(
+                    onClick = {
+                        val callbackManager = CallbackManager.Factory.create()
+                        LoginManager.getInstance().logInWithReadPermissions(
+                            context as Activity,
+                            listOf("email")
+                        )
+                    },
+                    modifier = Modifier
+                        .weight(8f)
+                        .shadow(0.dp),
+                    elevation = ButtonDefaults.elevation(
+                        defaultElevation = 0.dp,
+                        pressedElevation = 0.dp,
+                        hoveredElevation = 0.dp,
+                        focusedElevation = 0.dp
+                    ),
+                    shape = RoundedCornerShape(15.dp),
+                    contentPadding = PaddingValues(10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color.White,
+                        contentColor = Color.Red
+                    ),
+                    border = BorderStroke(1.dp, backgroundColor)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(15.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.CenterStart)
+                        ) {
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Icon(
+                                painter = painterResource(id = R.drawable.facebook),
+                                modifier = Modifier
+                                    .size(38.dp),
+                                contentDescription = "drawable_icons",
+                                tint = Color.Unspecified
+                            )
                         }
+                        Text(
+                            modifier = Modifier.align(Alignment.Center),
+                            text = "Facebook",
+                            color = backgroundColor,
+                            textAlign = TextAlign.Center,
+                            fontSize = 15.sp,
+                        )
                     }
                 }
+                Spacer(modifier = Modifier.weight(1f))
             }
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
-            )
-            {
+            ) {
                 if (googleSignInState.loading) {
                     CircularProgressIndicator()
                 }
