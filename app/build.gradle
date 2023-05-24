@@ -116,5 +116,17 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    
+    // material-icons-compose
+    implementation "androidx.compose.material:material-icons-extended:1.1.1"
+
+    // constraintlayout-compose
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0"
+
+    // collectAsStateWithLifecycle
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0"
+    
+    //coil images
+    implementation 'io.coil-kt:coil-compose:2.0.0-rc01'
 
 }
