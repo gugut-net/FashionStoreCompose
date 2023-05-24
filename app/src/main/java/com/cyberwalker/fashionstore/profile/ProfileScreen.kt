@@ -6,11 +6,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -26,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.cyberwalker.fashionstore.R
 import com.cyberwalker.fashionstore.dump.BottomNav
+import com.cyberwalker.fashionstore.navigation.Screen
 import com.cyberwalker.fashionstore.ui.theme.medium_18
 
 
@@ -46,7 +51,7 @@ fun ProfileScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .scrollable(state = scrollState, orientation = Orientation.Vertical),
-            onAction = onAction
+            onAction = onAction, navController = navController
         )
     }
 }
@@ -54,76 +59,143 @@ fun ProfileScreen(
 @Composable
 private fun ProfileScreenContent(
     modifier: Modifier,
-    onAction: (actions: ProfileScreenActions) -> Unit
+    onAction: (actions: ProfileScreenActions) -> Unit,
+    navController: NavHostController
 ) {
-    Column(
+    LazyColumn(
         modifier = modifier
             .padding(horizontal = 16.dp)
-            .fillMaxWidth()
-            .semantics { contentDescription = "Profile Screen" }
-            .verticalScroll(rememberScrollState()),
+            .fillMaxHeight()
+            .semantics { contentDescription = "Profile Screen" },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Profile", style = MaterialTheme.typography.medium_18)
-        Spacer(modifier = Modifier.height(16.dp))
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { /* Handle avatar click */ },
-            elevation = 4.dp
-        ) {
+        item {
+            Spacer(modifier = Modifier.size(16.dp))
+            Spacer(modifier = Modifier.size(24.dp))
             Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier
+                    .fillMaxWidth()
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.img_4),
-                    contentDescription = "Avatar",
-                    modifier = Modifier
-                        .size(100.dp)
-                        .clip(CircleShape)
-                )
+                Text(text = "Profile", style = MaterialTheme.typography.medium_18)
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = { /* Handle profile update */ },
-                    modifier = Modifier.fillMaxWidth()
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+//                        .clickable { /* Handle avatar click */ },
+                    elevation = 4.dp
                 ) {
-                    Text(text = "Edit Profile")
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.img_4),
+                            contentDescription = "Avatar",
+                            modifier = Modifier
+                                .size(100.dp)
+                                .clip(CircleShape)
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(
+                            onClick = { /* Handle profile update */
+                                onAction(ProfileScreenActions.LoadEditProfile)
+                                navController.navigate(Screen.EditProfile.route)
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(text = "Edit Profile")
+                        }
+                    }
                 }
-            }
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { /* Handle payment method click */ },
-            elevation = 4.dp
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = "Payment Method")
-            }
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { /* Handle shopping history click */ },
-            elevation = 4.dp
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = "Shopping History")
+                Spacer(modifier = Modifier.height(16.dp))
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { /* Handle payment method click */
+                            onAction(ProfileScreenActions.LoadPayment)
+                            navController.navigate(Screen.PaymentMethod.route)
+                        },
+                    elevation = 4.dp
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(text = "Payment Method")
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { /* Handle shopping history click */
+                            onAction(ProfileScreenActions.LoadShoppingHistory)
+                            navController.navigate(Screen.PaymentMethod.route)},
+                    elevation = 4.dp
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(text = "Shopping History")
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { /* Handle shopping history click */
+                            onAction(ProfileScreenActions.LoadSettings)
+                            navController.navigate(Screen.PaymentMethod.route)},
+                    elevation = 4.dp
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(text = "Settings")
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { /* Handle shopping history click */ },
+                    elevation = 4.dp
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(text = "Shopping History")
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { /* Handle shopping history click */
+                            onAction(ProfileScreenActions.LoadSupport)
+                            navController.navigate(Screen.SupportScreen.route)},
+                    elevation = 4.dp
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(text = "Contact us")
+                    }
+                }
             }
         }
     }
 }
 
 sealed class ProfileScreenActions {
-    object LoadProfile : ProfileScreenActions()
+    object LoadPayment : ProfileScreenActions()
+    object LoadEditProfile : ProfileScreenActions()
+    object LoadShoppingHistory : ProfileScreenActions()
+    object LoadSettings : ProfileScreenActions()
+    object LoadSupport : ProfileScreenActions()
 }
 
