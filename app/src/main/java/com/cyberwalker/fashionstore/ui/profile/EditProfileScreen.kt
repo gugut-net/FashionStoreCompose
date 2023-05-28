@@ -1,4 +1,4 @@
-package com.cyberwalker.fashionstore.profile
+package com.cyberwalker.fashionstore.ui.profile
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.gestures.Orientation
@@ -16,7 +16,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.cyberwalker.fashionstore.dump.BottomNav
-import com.cyberwalker.fashionstore.navigation.Screen
 import com.cyberwalker.fashionstore.ui.theme.medium_18
 
 @Composable

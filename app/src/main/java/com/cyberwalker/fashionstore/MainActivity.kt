@@ -30,7 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.cyberwalker.fashionstore.login.SignInScreen
 import com.cyberwalker.fashionstore.navigation.FashionNavGraph
-import com.cyberwalker.fashionstore.ui.theme.FashionStoreTheme
+import com.cyberwalker.fashionstore.ui.theme.FashionTheme
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            FashionStoreTheme {
+            FashionTheme() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -81,7 +81,7 @@ fun App() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    FashionStoreTheme {
+    FashionTheme() {
         App()
     }
 }

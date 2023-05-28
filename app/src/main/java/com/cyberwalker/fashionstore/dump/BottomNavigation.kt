@@ -64,15 +64,14 @@ fun BottomNav(navController: NavController, isDark: Boolean = isSystemInDarkThem
                         BottomNavItem.Liked -> {
                             navController.navigate(BottomNavItem.Liked.screen_route)
                         }
-                        BottomNavItem.Cart -> {
-                            navController.navigate(BottomNavItem.Cart.screen_route)
-                        }
                         BottomNavItem.Profile -> {
                             navController.navigate(BottomNavItem.Profile.screen_route)
                         }
+                        BottomNavItem.Cart -> {
+                            navController.navigate(BottomNavItem.Cart.screen_route)
+                        }
                         else -> {}
                     }
-
                 }
             )
         }

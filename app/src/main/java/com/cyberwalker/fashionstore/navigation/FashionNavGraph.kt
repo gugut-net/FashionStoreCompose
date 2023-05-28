@@ -21,14 +21,17 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.cyberwalker.fashionstore.card.PaymentScreen
 import com.cyberwalker.fashionstore.card.PaymentScreenActions
 import com.cyberwalker.fashionstore.cart.CartScreen
 import com.cyberwalker.fashionstore.cart.CartScreenActions
-import com.cyberwalker.fashionstore.contactus.SupportScreen
-import com.cyberwalker.fashionstore.contactus.SupportScreenActions
+import com.cyberwalker.fashionstore.cart.CartViewModel
+import com.cyberwalker.fashionstore.ui.contactus.SupportScreen
+import com.cyberwalker.fashionstore.ui.contactus.SupportScreenActions
 import com.cyberwalker.fashionstore.detail.DetailScreen
 import com.cyberwalker.fashionstore.detail.DetailScreenActions
 import com.cyberwalker.fashionstore.dump.animatedComposable
@@ -40,18 +43,20 @@ import com.cyberwalker.fashionstore.login.SignInScreen
 import com.cyberwalker.fashionstore.login.SignInScreenActions
 import com.cyberwalker.fashionstore.login.SignUpScreen
 import com.cyberwalker.fashionstore.login.SignUpScreenActions
-import com.cyberwalker.fashionstore.profile.EditProfileScreen
-import com.cyberwalker.fashionstore.profile.EditProfileScreenActions
-import com.cyberwalker.fashionstore.profile.ProfileScreen
-import com.cyberwalker.fashionstore.profile.ProfileScreenActions
+import com.cyberwalker.fashionstore.ui.profile.EditProfileScreen
+import com.cyberwalker.fashionstore.ui.profile.EditProfileScreenActions
+import com.cyberwalker.fashionstore.ui.profile.ProfileScreen
+import com.cyberwalker.fashionstore.ui.profile.ProfileScreenActions
 import com.cyberwalker.fashionstore.promo.PromoScreen
 import com.cyberwalker.fashionstore.promo.PromoScreenActions
-import com.cyberwalker.fashionstore.search.SearchScreen
-import com.cyberwalker.fashionstore.search.SearchScreenActions
+import com.cyberwalker.fashionstore.ui.search.SearchScreen
+import com.cyberwalker.fashionstore.ui.search.SearchScreenActions
 import com.cyberwalker.fashionstore.splash.SplashScreen
 import com.cyberwalker.fashionstore.splash.SplashScreenActions
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 
 sealed class Screen(val name: String, val route: String) {
 
@@ -68,9 +73,6 @@ sealed class Screen(val name: String, val route: String) {
     object EditProfile : Screen("editProfile", "editProfile")
     object PaymentMethod : Screen("paymentMethod", "paymentMethod")
     object SupportScreen : Screen("support", "support")
-
-
-
 
 }
 
@@ -128,9 +130,15 @@ fun FashionNavGraph(
         }
 
         animatedComposable(Screen.Cart.route) {
+            val cartNavController = rememberNavController()
+            val viewModel: CartViewModel = viewModel(
+                factory = CartViewModel.provideFactory())
             CartScreen(
+                onSnackClick = {},
+                modifier = Modifier,
+                viewModel = viewModel,
                 onAction = actions::navigateToCart,
-                navController = navController
+                navController = cartNavController
             )
         }
 
@@ -172,7 +180,8 @@ fun FashionNavGraph(
         animatedComposable(Screen.SupportScreen.route) {
             SupportScreen(
                 onAction = actions::navigateToSupport,
-                navController = navController
+                navController = navController,
+                firebaseMessaging = Firebase.messaging
             )
         }
     }
@@ -209,6 +218,10 @@ class NavActions(private val navController: NavController) {
         }
     }
 
+//    fun navigateToCart(actions: CartScreenActions) {
+//        navController.navigate(Screen.Cart.route) // Navigate to the Cart screen
+//    }
+
     fun navigateToCart(actions: CartScreenActions) {
         when (actions) {
             CartScreenActions.LoadCart -> {
@@ -238,6 +251,8 @@ class NavActions(private val navController: NavController) {
             ProfileScreenActions.LoadPayment -> {
                 navController.navigate(Screen.Profile.route)
             }
+
+            else -> {}
         }
     }
 

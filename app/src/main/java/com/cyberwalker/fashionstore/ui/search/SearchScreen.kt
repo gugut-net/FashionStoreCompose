@@ -1,4 +1,4 @@
-package com.cyberwalker.fashionstore.search
+package com.cyberwalker.fashionstore.ui.search
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.gestures.Orientation
