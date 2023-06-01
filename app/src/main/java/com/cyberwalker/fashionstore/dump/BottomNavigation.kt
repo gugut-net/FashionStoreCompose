@@ -15,30 +15,50 @@
  */
 package com.cyberwalker.fashionstore.dump
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.cyberwalker.fashionstore.R
-import com.cyberwalker.fashionstore.navigation.Screen
 import com.cyberwalker.fashionstore.ui.theme.bottomNavbg
 import com.cyberwalker.fashionstore.ui.theme.highlight
 
+enum class BottomNavItem(
+    @StringRes val title: Int,
+    val icon: ImageVector,
+    val route: String
+) {
+    HOME(R.string.home_feed, Icons.Outlined.Home, "home"),
+    SEARCH(R.string.home_search, Icons.Outlined.Search, "search"),
+    LIKED(R.string.home_liked, Icons.Outlined.Favorite, "liked"),
+    CART(R.string.home_cart, Icons.Outlined.ShoppingCart, "cart"),
+    PROFILE(R.string.home_profile, Icons.Outlined.AccountCircle, "profile")
+}
+
 @Composable
-fun BottomNav(navController: NavController, isDark: Boolean = isSystemInDarkTheme()) {
+fun BottomNav(modifier: Modifier = Modifier, navController: NavController, isDark: Boolean = isSystemInDarkTheme()) {
     val items = listOf(
-        BottomNavItem.Home,
-        BottomNavItem.Search,
-        BottomNavItem.Liked,
-        BottomNavItem.Cart,
-        BottomNavItem.Profile,
+        BottomNavItem.HOME,
+        BottomNavItem.SEARCH,
+        BottomNavItem.LIKED,
+        BottomNavItem.CART,
+        BottomNavItem.PROFILE,
     )
     BottomNavigation(
         backgroundColor = MaterialTheme.colors.bottomNavbg,
@@ -48,41 +68,31 @@ fun BottomNav(navController: NavController, isDark: Boolean = isSystemInDarkThem
         val currentRoute = navBackStackEntry?.destination?.route
         items.forEach { item ->
             BottomNavigationItem(
-                icon = { Icon(painterResource(id = item.icon), contentDescription = item.title) },
+                icon = { Icon(item.icon, contentDescription = stringResource(item.title)) },
                 selectedContentColor = highlight,
                 unselectedContentColor = Color.Black.copy(0.4f),
                 alwaysShowLabel = false,
-                selected = currentRoute == item.screen_route,
+                selected = currentRoute == item.route,
                 onClick = {
                     when(item) {
-                        BottomNavItem.Home -> {
-                            navController.navigate(BottomNavItem.Home.screen_route)
+                        BottomNavItem.HOME -> {
+                            navController.navigate(BottomNavItem.HOME.route)
                         }
-                        BottomNavItem.Search -> {
-                            navController.navigate(BottomNavItem.Search.screen_route)
+                        BottomNavItem.SEARCH -> {
+                            navController.navigate(BottomNavItem.SEARCH.route)
                         }
-                        BottomNavItem.Liked -> {
-                            navController.navigate(BottomNavItem.Liked.screen_route)
+                        BottomNavItem.LIKED -> {
+                            navController.navigate(BottomNavItem.LIKED.route)
                         }
-                        BottomNavItem.Profile -> {
-                            navController.navigate(BottomNavItem.Profile.screen_route)
+                        BottomNavItem.PROFILE -> {
+                            navController.navigate(BottomNavItem.PROFILE.route)
                         }
-                        BottomNavItem.Cart -> {
-                            navController.navigate(BottomNavItem.Cart.screen_route)
+                        BottomNavItem.CART -> {
+                            navController.navigate(BottomNavItem.CART.route)
                         }
-                        else -> {}
                     }
                 }
             )
         }
     }
-}
-
-sealed class BottomNavItem(var title: String, var icon: Int, var screen_route: String) {
-
-    object Home : BottomNavItem("Home", R.drawable.home, Screen.Home.route)
-    object Search : BottomNavItem("Search", R.drawable.search, "Search")
-    object Liked : BottomNavItem("Liked", R.drawable.liked, "Liked")
-    object Cart : BottomNavItem("Cart", R.drawable.cart, "Cart")
-    object Profile : BottomNavItem("Profile", R.drawable.profile, "Profile")
 }

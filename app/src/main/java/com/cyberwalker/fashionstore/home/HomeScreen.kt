@@ -21,6 +21,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -110,7 +115,6 @@ private fun HomeScreenContent(
                 contentDescription = null
             )
         }
-
         Row(
             modifier = Modifier
                 .padding(start = 40.dp, end = 12.dp)
@@ -177,11 +181,18 @@ private fun HomeScreenContent(
 }
 
 @Composable
-private fun TabRow() {
+private fun TabRow(
+    onClothsClick: () -> Unit = {},
+    onShoesClick: () -> Unit = {},
+    onBeltClick: () -> Unit = {}
+) {
+    var selectedItem by remember { mutableStateOf("") }
+
     Row(
         modifier = Modifier
             .vertical()
-            .rotate(-90F), verticalAlignment = Alignment.CenterVertically
+            .rotate(-90F),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(
             modifier = Modifier
@@ -201,23 +212,70 @@ private fun TabRow() {
                 .background(color = ltgray_dot, shape = CircleShape)
         )
         Spacer(modifier = Modifier.size(24.dp))
-        Text(text = "Belt", style = MaterialTheme.typography.medium_18)
+        Box(
+            modifier = Modifier
+                .size(70.dp, 28.dp)
+                .background(
+                    color = if (selectedItem == "Belt") highlight else Color.Gray,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .clickable {
+                    selectedItem = "Belt"
+                    onBeltClick()
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Belt",
+                style = MaterialTheme.typography.medium_18,
+                color = if (selectedItem == "Belt") Color.Black else Color.White
+            )
+        }
         Spacer(modifier = Modifier.size(24.dp))
         Box(
             modifier = Modifier
                 .size(70.dp, 28.dp)
-                .background(color = highlight, shape = RoundedCornerShape(8.dp)),
+                .background(
+                    color = if (selectedItem == "Cloths") highlight else Color.Gray,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .clickable {
+                    selectedItem = "Cloths"
+                    onClothsClick()
+                },
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Cloths", style = MaterialTheme.typography.medium_18, color = Color.White)
+            Text(
+                text = "Cloths",
+                style = MaterialTheme.typography.medium_18,
+                color = if (selectedItem == "Cloths") Color.Black else Color.White
+            )
         }
         Spacer(modifier = Modifier.size(32.dp))
-        Text(text = "Shoes", style = MaterialTheme.typography.medium_18)
+        Box(
+            modifier = Modifier
+                .size(70.dp, 28.dp)
+                .background(
+                    color = if (selectedItem == "Shoes") highlight else Color.Gray,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .clickable {
+                    selectedItem = "Shoes"
+                    onShoesClick()
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Shoes",
+                style = MaterialTheme.typography.medium_18,
+                color = if (selectedItem == "Shoes") Color.Black else Color.White
+            )
+        }
     }
 }
 
 @Composable
-private fun GridOfImages(onAction: (actions: HomeScreenActions) -> Unit,) {
+private fun GridOfImages(onAction: (actions: HomeScreenActions) -> Unit) {
     Row(modifier = Modifier.fillMaxWidth()) {
         Column {
             Box(
@@ -344,7 +402,6 @@ private fun GridOfImages(onAction: (actions: HomeScreenActions) -> Unit,) {
         }
     }
 }
-
 
 sealed class HomeScreenActions {
     object Details : HomeScreenActions()

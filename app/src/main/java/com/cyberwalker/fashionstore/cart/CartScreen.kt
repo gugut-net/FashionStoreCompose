@@ -54,18 +54,20 @@ import com.cyberwalker.fashionstore.ui.components.SnackCollection
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.cyberwalker.fashionstore.R
+import com.cyberwalker.fashionstore.dump.BottomNav
 import com.cyberwalker.fashionstore.model.OrderLine
 import com.cyberwalker.fashionstore.model.SnackCollection
 import com.cyberwalker.fashionstore.model.SnackRepo
-//import com.cyberwalker.fashionstore.splash.SplashScreenActions
 import com.cyberwalker.fashionstore.ui.components.JetsnackButton
 import com.cyberwalker.fashionstore.ui.components.JetsnackDivider
 import com.cyberwalker.fashionstore.ui.components.JetsnackScaffold
+import com.cyberwalker.fashionstore.ui.components.JetsnackSurface
 import com.cyberwalker.fashionstore.ui.components.SnackImage
 import com.cyberwalker.fashionstore.ui.theme.FashionTheme
 import com.cyberwalker.fashionstore.ui.theme.txtColor
@@ -107,7 +109,13 @@ fun CartScreen(
     onAction: (actions: CartScreenActions) -> Unit,
     navController: NavController
 ) {
-    JetsnackScaffold(modifier = modifier.fillMaxSize()) {
+//    JetsnackScaffold(
+//        modifier = modifier.fillMaxSize(),
+//        bottomBar = {
+//            BottomNav(navController = navController)
+//        }
+//    ) {
+    JetsnackSurface(modifier = modifier.fillMaxSize()) {
         Box {
             CartContent(
                 orderLines = orderLines,
@@ -116,8 +124,12 @@ fun CartScreen(
                 decreaseItemCount = decreaseItemCount,
                 inspiredByCart = inspiredByCart,
                 onSnackClick = onSnackClick,
-                modifier = Modifier.align(Alignment.TopCenter)
+                modifier = Modifier.align(Alignment.TopCenter),
+                onAction = onAction,
+                navController = navController
+
             )
+
             CheckoutBar(modifier = Modifier.align(Alignment.BottomCenter))
         }
     }
@@ -131,7 +143,9 @@ private fun CartContent(
     decreaseItemCount: (Long) -> Unit,
     inspiredByCart: SnackCollection,
     onSnackClick: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onAction: (actions: CartScreenActions) -> Unit,
+    navController: NavController
 ) {
     val resources = LocalContext.current.resources
     val snackCountFormattedString = remember(orderLines.size, resources) {
