@@ -47,7 +47,6 @@ enum class BottomNavItem(
     HOME(R.string.home_feed, Icons.Outlined.Home, "home"),
     SEARCH(R.string.home_search, Icons.Outlined.Search, "search"),
     LIKED(R.string.home_liked, Icons.Outlined.Favorite, "liked"),
-    CART(R.string.home_cart, Icons.Outlined.ShoppingCart, "cart"),
     PROFILE(R.string.home_profile, Icons.Outlined.AccountCircle, "profile")
 }
 
@@ -57,7 +56,6 @@ fun BottomNav(modifier: Modifier = Modifier, navController: NavController, isDar
         BottomNavItem.HOME,
         BottomNavItem.SEARCH,
         BottomNavItem.LIKED,
-        BottomNavItem.CART,
         BottomNavItem.PROFILE,
     )
     BottomNavigation(
@@ -86,9 +84,6 @@ fun BottomNav(modifier: Modifier = Modifier, navController: NavController, isDar
                         }
                         BottomNavItem.PROFILE -> {
                             navController.navigate(BottomNavItem.PROFILE.route)
-                        }
-                        BottomNavItem.CART -> {
-                            navController.navigate(BottomNavItem.CART.route)
                         }
                     }
                 }

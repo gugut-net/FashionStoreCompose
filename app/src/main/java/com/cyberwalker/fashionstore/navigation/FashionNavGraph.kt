@@ -59,8 +59,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 
 sealed class Screen(val name: String, val route: String) {
-
-    object Splash : Screen("splash", "splash")
     object Home : Screen("home", "home")
     object Detail : Screen("detail", "detail")
     object SignIn: Screen("signin","signin")
@@ -73,7 +71,6 @@ sealed class Screen(val name: String, val route: String) {
     object EditProfile : Screen("editProfile", "editProfile")
     object PaymentMethod : Screen("paymentMethod", "paymentMethod")
     object SupportScreen : Screen("support", "support")
-
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -87,15 +84,9 @@ fun FashionNavGraph(
 ) {
     AnimatedNavHost(
         navController = navController,
-        startDestination = Screen.Splash.route,
+        startDestination = Screen.SignIn.route,
         modifier = modifier
     ) {
-        animatedComposable(Screen.Splash.route) {
-            SplashScreen(
-                onAction = actions::navigateToSignIn
-            )
-        }
-
         animatedComposable(Screen.SignIn.route) {
             SignInScreen(
                 onAction = actions::navigateFromSignIn,
@@ -188,14 +179,6 @@ fun FashionNavGraph(
 }
 
 class NavActions(private val navController: NavController) {
-    fun navigateToSignIn(actions: SplashScreenActions) {
-        navController.navigate(Screen.SignIn.route) {
-            popUpTo(Screen.Splash.route) {
-                inclusive = true
-            }
-        }
-    }
-
     fun navigateFromHome(actions: HomeScreenActions) {
         when (actions) {
             HomeScreenActions.Details -> {
@@ -217,10 +200,6 @@ class NavActions(private val navController: NavController) {
             }
         }
     }
-
-//    fun navigateToCart(actions: CartScreenActions) {
-//        navController.navigate(Screen.Cart.route) // Navigate to the Cart screen
-//    }
 
     fun navigateToCart(actions: CartScreenActions) {
         when (actions) {
